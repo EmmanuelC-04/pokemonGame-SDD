@@ -24,6 +24,8 @@ export class Player {
     this.anim = 'idle';
     this.elapsedMs = 0;
     this.keys = new Set();
+    this.maxHp = 100;
+    this.hp = 100;
   }
 
   press(code) {
