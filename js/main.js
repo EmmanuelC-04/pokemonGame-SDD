@@ -34,7 +34,19 @@ function loop(now) {
 async function start() {
   assets = await loadAssets();
   player = new Player(canvas);
-  console.log('OK — Charizard en idle sobre el bosque (Paso 3).');
+
+  window.addEventListener('keydown', (e) => {
+    if (e.code.startsWith('Arrow')) e.preventDefault();
+    player.press(e.code);
+  });
+  window.addEventListener('keyup', (e) => {
+    player.release(e.code);
+  });
+  window.addEventListener('blur', () => {
+    player.clearKeys();
+  });
+
+  console.log('OK — movimiento con WASD/flechas (Paso 4).');
   requestAnimationFrame(loop);
 }
 
