@@ -39,6 +39,33 @@ function render() {
   }
 
   player.draw(ctx, assets);
+  drawHUD();
+}
+
+function drawHUD() {
+  const x = 16;
+  const y = 16;
+  const w = 120;
+  const h = 10;
+  const ratio = player.maxHp > 0
+    ? Math.min(1, Math.max(0, player.hp / player.maxHp))
+    : 0;
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+  ctx.fillRect(x - 6, y - 6, w + 12, h + 28);
+
+  ctx.fillStyle = '#222';
+  ctx.fillRect(x, y, w, h);
+
+  ctx.fillStyle = ratio > 0.5 ? '#4caf50' : ratio > 0.25 ? '#ffb74d' : '#f44336';
+  ctx.fillRect(x, y, w * ratio, h);
+
+  ctx.strokeStyle = '#000';
+  ctx.strokeRect(x, y, w, h);
+
+  ctx.fillStyle = '#fff';
+  ctx.font = '10px sans-serif';
+  ctx.fillText(`HP: ${player.hp}/${player.maxHp}`, x, y + h + 12);
 }
 
 function loop(now) {
