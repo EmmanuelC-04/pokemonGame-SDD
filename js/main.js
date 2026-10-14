@@ -99,6 +99,12 @@ async function start() {
       }
       return;
     }
+    if (e.code === 'KeyH') {
+      if (!e.repeat && player.hp > 0) {
+        player.hp = Math.max(0, player.hp - 10);
+      }
+      return;
+    }
     if (e.code.startsWith('Arrow')) e.preventDefault();
     player.press(e.code);
   });
