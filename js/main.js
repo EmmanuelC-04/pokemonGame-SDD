@@ -2,6 +2,7 @@ import { BACKGROUNDS } from '../spritesheet.js';
 import { loadAssets } from './assets.js';
 import { Player } from './player.js';
 import { Rival } from './rival.js';
+import { Battle } from './battle.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -11,6 +12,7 @@ const FADE_MS = 1000;
 let assets;
 let player;
 let rival;
+let battle;
 let lastTime = 0;
 
 let escenarioActual = 'fondo1';
@@ -98,8 +100,20 @@ async function start() {
   assets = await loadAssets();
   player = new Player(canvas);
   rival = new Rival(canvas);
+  battle = new Battle();
 
   window.addEventListener('keydown', (e) => {
+    if (e.code === 'KeyB') {
+      if (!e.repeat && battle.canStart(player, rival)) {
+        battle.start();
+        player.clearKeys();
+      }
+      return;
+    }
+    if (battle.active) {
+      if (e.code.startsWith('Arrow')) e.preventDefault();
+      return;
+    }
     if (e.code === 'KeyE') {
       if (!e.repeat && !enTransicion) {
         enTransicion = true;
