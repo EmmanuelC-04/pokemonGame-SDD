@@ -43,6 +43,15 @@ export class Player {
   }
 
   update(dt) {
+    if (this.hp <= 0) {
+      if (this.anim !== 'idle') this.elapsedMs = 0;
+      this.anim = 'idle';
+      this.dir = 'down';
+      this.elapsedMs += dt;
+      this.limitar();
+      return;
+    }
+
     let vx = 0, vy = 0;
     for (const d of this.keys) {
       if (d === 'up') vy -= 1;
