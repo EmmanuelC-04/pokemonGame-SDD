@@ -1,6 +1,7 @@
 import { BACKGROUNDS } from '../spritesheet.js';
 import { loadAssets } from './assets.js';
 import { Player } from './player.js';
+import { Rival } from './rival.js';
 
 const canvas = document.getElementById('game');
 const ctx = canvas.getContext('2d');
@@ -9,6 +10,7 @@ const FADE_MS = 1000;
 
 let assets;
 let player;
+let rival;
 let lastTime = 0;
 
 let escenarioActual = 'fondo1';
@@ -39,6 +41,7 @@ function render() {
   }
 
   player.draw(ctx, assets);
+  rival.draw(ctx, assets);
   drawHUD();
 }
 
@@ -72,6 +75,7 @@ function loop(now) {
   const dt = lastTime ? Math.min(now - lastTime, MAX_DT) : 0;
   lastTime = now;
   player.update(dt);
+  rival.update(dt);
 
   if (enTransicion) {
     progreso = Math.min(1, progreso + dt / FADE_MS);
@@ -90,6 +94,7 @@ function loop(now) {
 async function start() {
   assets = await loadAssets();
   player = new Player(canvas);
+  rival = new Rival(canvas);
 
   window.addEventListener('keydown', (e) => {
     if (e.code === 'KeyE') {
