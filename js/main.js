@@ -81,6 +81,7 @@ function loop(now) {
   lastTime = now;
   player.update(dt);
   rival.update(dt);
+  battle.update(dt, player, rival);
 
   if (enTransicion) {
     progreso = Math.min(1, progreso + dt / FADE_MS);
@@ -106,8 +107,15 @@ async function start() {
     if (e.code === 'KeyB') {
       if (!e.repeat && battle.canStart(player, rival)) {
         battle.start();
+        player.controlLocked = true;
+        player.anim = 'idle';
+        player.elapsedMs = 0;
         player.clearKeys();
       }
+      return;
+    }
+    if (e.code === 'KeyJ') {
+      if (!e.repeat) battle.startAttack(player, rival);
       return;
     }
     if (battle.active) {

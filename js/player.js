@@ -26,6 +26,7 @@ export class Player {
     this.keys = new Set();
     this.maxHp = 100;
     this.hp = 100;
+    this.controlLocked = false;
   }
 
   press(code) {
@@ -43,6 +44,11 @@ export class Player {
   }
 
   update(dt) {
+    if (this.controlLocked) {
+      this.elapsedMs += dt;
+      return;
+    }
+
     if (this.hp <= 0) {
       if (this.anim !== 'idle') this.elapsedMs = 0;
       this.anim = 'idle';
@@ -93,7 +99,8 @@ export class Player {
   }
 
   draw(ctx, images) {
-    const idx = frameIndexAt(this.anim, this.elapsedMs);
+    const loop = this.anim === 'idle' || this.anim === 'walk';
+    const idx = frameIndexAt(this.anim, this.elapsedMs, loop);
     const f = getFrame(this.anim, this.dir, idx);
     const img = images.charizard[this.anim];
     const dx = this.px - f.shadow.x * ESCALA;
