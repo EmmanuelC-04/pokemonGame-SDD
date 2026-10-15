@@ -53,21 +53,61 @@ export class Battle {
 
   update(dt, player, rival) {
     if (this.state !== 'active') return;
-    if (this.phase !== 'playerAttacking') return;
 
-    this.timer += dt;
+    if (this.phase === 'playerAttacking') {
+      this.timer += dt;
 
-    if (!this.damageApplied && this.timer >= IMPACTO_ATTACK_MS) {
-      rival.hp = Math.max(0, rival.hp - ATAQUE_DANO);
-      this.damageApplied = true;
+      if (!this.damageApplied && this.timer >= IMPACTO_ATTACK_MS) {
+        rival.hp = Math.max(0, rival.hp - ATAQUE_DANO);
+        this.damageApplied = true;
+      }
+
+      if (this.timer >= CHARIZARD.attack.totalMs) {
+        player.anim = 'idle';
+        player.elapsedMs = 0;
+        this.timer = 0;
+        this.damageApplied = false;
+        this.phase = rival.hp > 0 ? 'rivalTurn' : 'ended';
+      }
+      return;
     }
 
-    if (this.timer >= CHARIZARD.attack.totalMs) {
-      player.anim = 'idle';
-      player.elapsedMs = 0;
-      this.timer = 0;
-      this.damageApplied = false;
-      this.phase = rival.hp > 0 ? 'playerTurn' : 'ended';
+    if (this.phase === 'rivalTurn') {
+      this.timer += dt;
+
+      if (this.timer >= PAUSA_TURNO_MS) {
+        rival.anim = 'attack';
+        rival.elapsedMs = 0;
+        this.timer = 0;
+        this.damageApplied = false;
+        this.phase = 'rivalAttacking';
+      }
+      return;
+    }
+
+    if (this.phase === 'rivalAttacking') {
+      this.timer += dt;
+
+      if (!this.damageApplied && this.timer >= IMPACTO_ATTACK_MS) {
+        player.hp = Math.max(0, player.hp - ATAQUE_DANO);
+        this.damageApplied = true;
+        player.anim = 'hurt';
+        player.elapsedMs = 0;
+      }
+
+      if (player.anim === 'hurt' && player.elapsedMs >= CHARIZARD.hurt.totalMs) {
+        player.anim = 'idle';
+        player.elapsedMs = 0;
+      }
+
+      if (this.timer >= CHARIZARD.attack.totalMs) {
+        rival.anim = 'idle';
+        rival.elapsedMs = 0;
+        this.timer = 0;
+        this.damageApplied = false;
+        this.phase = (player.hp > 0 && rival.hp > 0) ? 'playerTurn' : 'ended';
+      }
+      return;
     }
   }
 }
