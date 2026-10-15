@@ -51,6 +51,19 @@ export class Battle {
     return true;
   }
 
+  finish(player, rival) {
+    this.state = 'finished';
+    this.phase = 'ended';
+    this.timer = 0;
+    this.damageApplied = false;
+    this.result = rival.hp <= 0 ? 'win' : 'lose';
+    player.controlLocked = false;
+    player.anim = 'idle';
+    player.elapsedMs = 0;
+    rival.anim = 'idle';
+    rival.elapsedMs = 0;
+  }
+
   update(dt, player, rival) {
     if (this.state !== 'active') return;
 
@@ -67,7 +80,11 @@ export class Battle {
         player.elapsedMs = 0;
         this.timer = 0;
         this.damageApplied = false;
-        this.phase = rival.hp > 0 ? 'rivalTurn' : 'ended';
+        if (rival.hp > 0) {
+          this.phase = 'rivalTurn';
+        } else {
+          this.finish(player, rival);
+        }
       }
       return;
     }
@@ -105,7 +122,11 @@ export class Battle {
         rival.elapsedMs = 0;
         this.timer = 0;
         this.damageApplied = false;
-        this.phase = (player.hp > 0 && rival.hp > 0) ? 'playerTurn' : 'ended';
+        if (player.hp > 0) {
+          this.phase = 'playerTurn';
+        } else {
+          this.finish(player, rival);
+        }
       }
       return;
     }

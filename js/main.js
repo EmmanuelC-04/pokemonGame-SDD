@@ -46,6 +46,32 @@ function render() {
   rival.draw(ctx, assets);
   drawHealthBar(16, 16, player);
   drawHealthBar(canvas.width - 16, 16, rival, true);
+  drawBanner();
+}
+
+function drawBanner() {
+  if (battle.state !== 'finished') return;
+  const texto = battle.result === 'win' ? '¡Victoria!' : '¡Derrota!';
+  const x = canvas.width / 2;
+  const y = canvas.height / 2;
+  const w = 360;
+  const h = 90;
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+  ctx.fillRect(x - w / 2, y - h / 2, w, h);
+  ctx.strokeStyle = '#fff';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(x - w / 2, y - h / 2, w, h);
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 48px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(texto, x, y);
+
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'alphabetic';
+  ctx.lineWidth = 1;
 }
 
 function drawHealthBar(x, y, combatiente, alinearDerecha = false) {
