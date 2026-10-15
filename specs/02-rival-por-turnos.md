@@ -83,7 +83,7 @@ Datos reales utilizados de `spritesheet.js`:
 | Animación | `durationsMs` | `totalMs` | `events` |
 |---|---|---|---|
 | `attack` | `[33.3 ×7, 16.7 ×3, 33.3 ×5]` | `450.0` | `{ rush: 2, hit: 8, return: 11 }` |
-| `hurt` | `[200.0, 166.7, 200.0, 166.7, 200.0]` | `933.3` | sin `events` (no tiene frame de impacto) |
+| `hurt` | `[33.3, 133.3]` | `166.7` | sin `events` (no tiene frame de impacto; 2 frames) |
 | `idle` | según `spritesheet.js` | según `spritesheet.js` | se reproduce en bucle (`loop=true`) como reposo |
 
 ### Cálculo del instante de impacto
